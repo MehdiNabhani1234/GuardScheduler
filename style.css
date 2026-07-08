@@ -1159,7 +1159,6 @@ padding: 15px 5px;
 
     border-radius:12px;
 
-    border:2px solid #ddd;
 
     padding:20px;
 
@@ -1223,5 +1222,34 @@ padding: 15px 5px;
     color:#dc2626;
 
     font-weight:bold;
+
+}
+/*====================================
+   Fairness Responsive
+====================================*/
+
+#fairnessContainer{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+#fairnessContainer .fairness-table{
+    min-width:700px;
+    width:100%;
+}
+
+@media (max-width:768px){
+
+    #fairnessContainer{
+        margin-top:15px;
+    }
+
+    #fairnessContainer .fairness-table th,
+    #fairnessContainer .fairness-table td{
+        white-space:nowrap;
+        padding:10px 14px;
+        font-size:13px;
+    }
 
 }

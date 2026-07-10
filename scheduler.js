@@ -248,18 +248,18 @@ function calculateTargetShifts() {
         person.targetShifts = 0;
 
     });
-activePersons.forEach(person => {
+    activePersons.forEach(person => {
 
-    person.targetShifts = Math.floor(
-        (person.coefficient / totalCoefficient) * TOTAL_SHIFTS
-    );
+        person.targetShifts = Math.floor(
+            (person.coefficient / totalCoefficient) * TOTAL_SHIFTS
+        );
 
-    // حداقل یک پاس
-    if (person.coefficient > 0 && person.targetShifts === 0) {
-        person.targetShifts = 1;
-    }
+        // حداقل یک پاس
+        if (person.coefficient > 0 && person.targetShifts === 0) {
+            person.targetShifts = 1;
+        }
 
-});
+    });
 
 
 
@@ -270,20 +270,20 @@ activePersons.forEach(person => {
         0
     );
 
-while (currentTotal > TOTAL_SHIFTS) {
+    while (currentTotal > TOTAL_SHIFTS) {
 
-    activePersons
-        .sort((a, b) => b.targetShifts - a.targetShifts);
+        activePersons
+            .sort((a, b) => b.targetShifts - a.targetShifts);
 
-    const person = activePersons.find(p => p.targetShifts > 1);
+        const person = activePersons.find(p => p.targetShifts > 1);
 
-    if (!person) break;
+        if (!person) break;
 
-    person.targetShifts--;
+        person.targetShifts--;
 
-    currentTotal--;
+        currentTotal--;
 
-}
+    }
     // اگر کمتر از 42 شد
     let i = 0;
 
@@ -347,10 +347,17 @@ function generateSchedule() {
     schedule = [];
 
     // صفر کردن پاس های قبلی
+    // صفر کردن آمار برنامه قبلی
     persons.forEach(person => {
 
         if (person.active) {
+
             person.assignedShifts = 0;
+            person.pass1 = 0;
+            person.pass2 = 0;
+            person.pass3 = 0;
+            person.lastAssignedDay = null;
+
         }
 
     });
@@ -374,27 +381,27 @@ function generateSchedule() {
 
         });
         // اگر کمتر از 3 نفر پیدا شد
-    if (availablePersons.length < 3) {
+        if (availablePersons.length < 3) {
 
-    const extraPersons = persons.filter(person => {
+            const extraPersons = persons.filter(person => {
 
-        return (
+                return (
 
-            person.active &&
+                    person.active &&
 
-            person.assignedShifts < person.targetShifts &&
+                    person.assignedShifts < person.targetShifts &&
 
-            !lastDayPersons.includes(person.id) &&
+                    !lastDayPersons.includes(person.id) &&
 
-            !availablePersons.includes(person)
+                    !availablePersons.includes(person)
 
-        );
+                );
 
-    });
+            });
 
-    availablePersons.push(...extraPersons);
+            availablePersons.push(...extraPersons);
 
-}
+        }
 
         if (availablePersons.length < 3) {
 
@@ -433,156 +440,156 @@ function generateSchedule() {
         });
 
 
-    
 
 
-    let todayPersons = [];
-//----------------------------------
-// کسانی که هنوز هیچ پاس نگرفته‌اند
-//----------------------------------
 
-let zeroShiftPersons = availablePersons.filter(
-    person => person.assignedShifts === 0
-);
+        let todayPersons = [];
+        //----------------------------------
+        // کسانی که هنوز هیچ پاس نگرفته‌اند
+        //----------------------------------
 
-zeroShiftPersons.forEach(person => {
+        let zeroShiftPersons = availablePersons.filter(
+            person => person.assignedShifts === 0
+        );
 
-    if (todayPersons.length >= 3)
-        return;
+        zeroShiftPersons.forEach(person => {
 
-    // فقط یک نفر ضریب 0.5
-    if (person.coefficient <= 0.5) {
+            if (todayPersons.length >= 3)
+                return;
 
-        let hasEasyPerson =
-            todayPersons.some(
-                p => p.coefficient <= 0.5
-            );
+            // فقط یک نفر ضریب 0.5
+            if (person.coefficient <= 0.5) {
 
-        if (hasEasyPerson)
-            return;
+                let hasEasyPerson =
+                    todayPersons.some(
+                        p => p.coefficient <= 0.5
+                    );
 
-    }
-if (todayPersons.includes(person)) {
-  return
-}
-    todayPersons.push(person);
+                if (hasEasyPerson)
+                    return;
 
-});
+            }
+            if (todayPersons.includes(person)) {
+                return
+            }
+            todayPersons.push(person);
 
- for (let person of availablePersons) {
+        });
 
-    if (todayPersons.includes(person)) {
-        continue;
-    }
+        for (let person of availablePersons) {
 
-    if (person.coefficient <= 0.5) {
+            if (todayPersons.includes(person)) {
+                continue;
+            }
 
-        let hasEasyPerson =
-            todayPersons.some(
-                p => p.coefficient <= 0.5
-            );
+            if (person.coefficient <= 0.5) {
 
-        if (hasEasyPerson) {
-            continue;
-        }
+                let hasEasyPerson =
+                    todayPersons.some(
+                        p => p.coefficient <= 0.5
+                    );
 
-    }
+                if (hasEasyPerson) {
+                    continue;
+                }
 
-    todayPersons.push(person);
+            }
 
-    if (todayPersons.length === 3) {
-        break;
-    }
+            todayPersons.push(person);
 
-}
-    // 👇 این خط را اضافه کن
-  todayPersons = todayPersons.slice(0,3);
-
-todayPersons = shufflePersons(todayPersons);
-    function shufflePersons(list) {
-
-        let result = [...list];
-
-        for (let i = result.length - 1; i > 0; i--) {
-
-            let j = Math.floor(Math.random() * (i + 1));
-
-            [result[i], result[j]] = [result[j], result[i]];
+            if (todayPersons.length === 3) {
+                break;
+            }
 
         }
+        // 👇 این خط را اضافه کن
+        todayPersons = todayPersons.slice(0, 3);
 
-        return result;
+        todayPersons = shufflePersons(todayPersons);
+        function shufflePersons(list) {
 
-    }
+            let result = [...list];
 
+            for (let i = result.length - 1; i > 0; i--) {
 
-    //========================================
-    // ضریب 0.5 همیشه پاس 1 باشد
-    //========================================
+                let j = Math.floor(Math.random() * (i + 1));
 
-    let easyIndex = todayPersons.findIndex(
-        person => person.coefficient <= 0.5
-    );
+                [result[i], result[j]] = [result[j], result[i]];
 
+            }
 
-    if (easyIndex > 0) {
-
-        let easyPerson = todayPersons.splice(
-            easyIndex,
-            1
-        )[0];
-
-
-        todayPersons.unshift(easyPerson);
-
-    }
-
-
-    todayPersons.forEach((person, index) => {
-
-        person.assignedShifts++;
-        person.lastAssignedDay = day;
-
-        if (index === 0) {
-
-            person.pass1++;
+            return result;
 
         }
 
-        else if (index === 1) {
 
-            person.pass2++;
+        //========================================
+        // ضریب 0.5 همیشه پاس 1 باشد
+        //========================================
+
+        let easyIndex = todayPersons.findIndex(
+            person => person.coefficient <= 0.5
+        );
+
+
+        if (easyIndex > 0) {
+
+            let easyPerson = todayPersons.splice(
+                easyIndex,
+                1
+            )[0];
+
+
+            todayPersons.unshift(easyPerson);
 
         }
 
-        else {
 
-            person.pass3++;
+        todayPersons.forEach((person, index) => {
 
-        }
+            person.assignedShifts++;
+            person.lastAssignedDay = day;
 
-    });
+            if (index === 0) {
+
+                person.pass1++;
+
+            }
+
+            else if (index === 1) {
+
+                person.pass2++;
+
+            }
+
+            else {
+
+                person.pass3++;
+
+            }
+
+        });
 
 
-    schedule.push({
+        schedule.push({
 
-        day: day,
+            day: day,
 
-        persons: todayPersons
+            persons: todayPersons
 
-    });
-
-
-
-    lastDayPersons = todayPersons.map(p => p.id);
+        });
 
 
-}
-// نمایش برنامه
-showSchedule();
 
-// نمایش گزارش عدالت
-calculateFairness();
+        lastDayPersons = todayPersons.map(p => p.id);
+
+
+    }
+    // نمایش برنامه
+    showSchedule();
+
+    // نمایش گزارش عدالت
+    calculateFairness();
 
 }
 // function arrangeGuardOrder(personsList){
@@ -686,15 +693,12 @@ function calculateFairness() {
     container.innerHTML = "";
 
     let html = `
-        <div class="fairness-box">
 
-            <h3>📊 گزارش عدالت برنامه</h3>
 
             <table class="fairness-table">
 
              <tr>
     <th>نام</th>
-    <th>سهم</th>
     <th>پاس گرفته</th>
     <th>پاس۱</th>
     <th>پاس۲</th>
@@ -703,21 +707,35 @@ function calculateFairness() {
 </tr>
     `;
 
-    persons
-        .filter(person => person.active)
-        .forEach(person => {
+ persons.forEach(person => {
+    if (!person.active) {
 
-            //-----------------------------
-            // عدالت بر اساس ضریب
-            //-----------------------------
+    html += `
+    <tr class="inactive-person">
 
-            //===============================
-            // عدالت تعداد پاس نسبت به سهم
-            //===============================
+        <td>${person.name}</td>
 
-            //-----------------------------------
-            // 1- عدالت تعداد پاس
-            //-----------------------------------
+        <td>-</td>
+
+        <td>-</td>
+
+        <td>-</td>
+
+        <td>-</td>
+
+        <td>
+        <span class="status inactive">
+            مرخصی
+        </span>
+    </td>
+
+    </tr>
+    `;
+
+    return;
+
+}
+
 
             let shiftScore = 100;
 
@@ -867,14 +885,41 @@ function calculateFairness() {
 
                 );
 
+let fairnessValue = Math.round(fairness);
 
+let fairnessClass = "";
+
+if (fairnessValue < 40){
+
+    fairnessClass = "fairness-red";
+
+}
+else if (fairnessValue < 60){
+
+    fairnessClass = "fairness-orange";
+
+}
+else if (fairnessValue < 80){
+
+    fairnessClass = "fairness-yellow";
+
+}
+else if (fairnessValue < 95){
+
+    fairnessClass = "fairness-green";
+
+}
+else{
+
+    fairnessClass = "fairness-perfect";
+
+}
 
             html += `
 <tr>
 
 <td>${person.name}</td>
 
-<td>${person.targetShifts}</td>
 
 <td>${person.assignedShifts}</td>
 
@@ -884,7 +929,13 @@ function calculateFairness() {
 
 <td>${person.pass3}</td>
 
-<td>${fairness.toFixed(0)}%</td>
+<td>
+
+<div class="fairness-circle ${fairnessClass}">
+    ${fairnessValue}%
+</div>
+
+</td>
 
 </tr>
 `;
@@ -1007,3 +1058,38 @@ function togglePerson(id) {
     renderPersons();
 
 }
+
+function downloadFairnessPDF() {
+
+    const element = document.getElementById("fairnessContainer");
+
+    const options = {
+
+        margin: [10,10,10,10],
+
+        filename: "گزارش-عدالت.pdf",
+
+        image: {
+            type: "jpeg",
+            quality: 1
+        },
+
+        html2canvas: {
+            scale: 2
+        },
+
+        jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait"
+        }
+
+    };
+
+    html2pdf()
+        .set(options)
+        .from(element)
+        .save();
+
+}
+

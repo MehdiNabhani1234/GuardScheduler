@@ -1251,5 +1251,127 @@ padding: 15px 5px;
         padding:10px 14px;
         font-size:13px;
     }
+.person-tools input{
+    padding: 10px 18px;
+}
+}
+
+#fairnessPdfBtn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #dc2626,
+        #ef4444
+    );
+
+    color:#fff;
+
+    border:none;
+
+    border-radius:15px;
+
+    padding:14px 25px;
+
+    font-size:17px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.12);
+
+    margin-bottom:20px;
+
+}
+
+#fairnessPdfBtn:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/*==============================
+      Fairness Circle
+===============================*/
+
+.fairness-circle{
+
+    width:56px;
+    height:56px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    color:#fff;
+
+    border:4px solid rgba(255,255,255,.5);
+
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
+
+}
+
+
+/* کمتر از 40 */
+
+.fairness-red{
+
+    background:#dc2626;
+
+}
+
+
+/* 40 تا 59 */
+
+.fairness-orange{
+
+    background:#f97316;
+
+}
+
+
+/* 60 تا 79 */
+
+.fairness-yellow{
+
+    background:#eab308;
+
+    color:#111827;
+
+}
+
+
+/* 80 تا 94 */
+
+.fairness-green{
+
+    background:#16a34a;
+
+}
+
+
+/* 95 تا 100 */
+
+.fairness-perfect{
+
+    background:linear-gradient(
+        135deg,
+        #16a34a,
+        #22c55e
+    );
+
+    border:4px solid #bbf7d0;
 
 }

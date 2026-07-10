@@ -12,7 +12,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
 
     },
     {
@@ -24,7 +27,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 3,
@@ -35,7 +41,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 4,
@@ -46,7 +55,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 5,
@@ -57,7 +69,10 @@ const defaultPersons = [
         assignedShifts: 0
         , pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 6,
@@ -68,7 +83,10 @@ const defaultPersons = [
         assignedShifts: 0
         , pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 7,
@@ -79,7 +97,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 8,
@@ -90,7 +111,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     },
     {
         id: 9,
@@ -101,7 +125,10 @@ const defaultPersons = [
         assignedShifts: 0,
         pass1: 0,
         pass2: 0,
-        pass3: 0
+        pass3: 0,
+           totalAssigned:0,      // مجموع پاس های تمام هفته ها
+
+    carry:0   
     }
 ];
 let persons = JSON.parse(
@@ -309,9 +336,16 @@ function calculateTargetShifts() {
 
     // ذخیره تعداد باقی مانده
 
-    activePersons.forEach(person => {
-        person.remainingShifts = person.targetShifts;
-    });
+ activePersons.forEach(person => {
+
+    person.remainingShifts = person.targetShifts;
+
+    // تاثیر برنامه‌های قبلی
+    person.priority =
+        person.targetShifts -
+        (person.historyShifts || 0);
+
+});
 
 
 }
@@ -421,23 +455,27 @@ function generateSchedule() {
 
         }
         // مرتب سازی بر اساس کسانی که هنوز پاس بیشتری دارند
-        availablePersons.sort((a, b) => {
+    availablePersons.sort((a, b) => {
 
-            const progressA =
-                a.assignedShifts / Math.max(a.targetShifts, 1);
+    // اول کسانی که در هفته‌های قبل کمتر کشیک داشته‌اند
+    if ((b.priority || 0) !== (a.priority || 0)) {
+        return (b.priority || 0) - (a.priority || 0);
+    }
 
-            const progressB =
-                b.assignedShifts / Math.max(b.targetShifts, 1);
+    // بعد پیشرفت همین هفته
+    const progressA =
+        a.assignedShifts / Math.max(a.targetShifts, 1);
 
-            if (progressA !== progressB) {
+    const progressB =
+        b.assignedShifts / Math.max(b.targetShifts, 1);
 
-                return progressA - progressB;
+    if (progressA !== progressB) {
+        return progressA - progressB;
+    }
 
-            }
+    return Math.random() - 0.5;
 
-            return Math.random() - 0.5;
-
-        });
+});
 
 
 
@@ -585,6 +623,18 @@ function generateSchedule() {
 
 
     }
+    // ذخیره سابقه برای هفته‌های بعد
+persons.forEach(person => {
+
+    if (!person.active) return;
+
+    person.historyShifts =
+        (person.historyShifts || 0) +
+        person.assignedShifts;
+
+});
+
+savePersons();
     // نمایش برنامه
     showSchedule();
 

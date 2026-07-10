@@ -473,7 +473,7 @@ function generateSchedule() {
         return progressA - progressB;
     }
 
-    return Math.random() - 0.5;
+    return Math.random() - 1.5;
 
 });
 
